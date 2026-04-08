@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/mainMenu.uss?fileID=7433441132597879392&amp;guid=f611e98c513876047bfbd2eb2e79f2f4&amp;type=3#mainMenu"/>
+    <ui:VisualElement name="root" class="root">
+        <ui:Label name="titleLabel" text="C64 SNAKE" class="title"/>
+        <ui:Button name="startButton" text="START" class="menuButton"/>
+        <ui:Button name="quitButton" text="QUIT" class="menuButton"/>
+    </ui:VisualElement>
+</ui:UXML>
