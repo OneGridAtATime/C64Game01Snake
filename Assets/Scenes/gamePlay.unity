@@ -152,6 +152,9 @@ MonoBehaviour:
   moveDelay: 0.2
   gridSize: 1
   bodyPrefab: {fileID: 7189311854407912598, guid: 22b8fb3f88785cf488f171b7b3ce99f6, type: 3}
+  foodPrefab: {fileID: 9117366515588543610, guid: 0fa76a20c85fd5c44b73f6c7794e46b1, type: 3}
+  gridMin: {x: -8, y: -4}
+  gridMax: {x: 8, y: 4}
 --- !u!212 &97493141
 SpriteRenderer:
   serializedVersion: 2

@@ -1,23 +1,31 @@
 using System.Collections.Generic;
-// using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     [SerializeField] private float moveDelay = 0.2f;
     [SerializeField] private float gridSize = 1f;
+
+    [Header("Body")]
     [SerializeField] private GameObject bodyPrefab;
 
-    private GameInputActions input;
+    [Header("Food")]
+    [SerializeField] private GameObject foodPrefab;
+    [SerializeField] private Vector2Int gridMin = new Vector2Int(-8, -4);
+    [SerializeField] private Vector2Int gridMax = new Vector2Int(8, 4);
 
+    private GameInputActions input;
     private Vector2 inputDirection;
     private Vector2 moveDirection = Vector2.right;
 
     private float moveTimer;
 
-    private List<Transform> bodySegments = new List<Transform>();
-    private List<Vector3> positions = new List<Vector3>();
+    private readonly List<Transform> bodySegments = new();
+    private readonly List<Vector3> positions = new();
+
+    private Transform foodTransform;
 
     private void Awake()
     {
@@ -26,8 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        // Start with 1 body segment
         Grow();
+        SpawnFood();
     }
 
     private void OnEnable()
@@ -54,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
 
             UpdateDirection();
             Move();
+            CheckFood();
         }
     }
 
@@ -64,30 +73,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateDirection()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            Debug.Log("Space pressed - Grow snake");
-            Grow();
-        }
-
         Vector2 newDirection = moveDirection;
 
         if (Mathf.Abs(inputDirection.x) > Mathf.Abs(inputDirection.y))
         {
             if (inputDirection.x > 0)
+            {
                 newDirection = Vector2.right;
+            }
             else if (inputDirection.x < 0)
+            {
                 newDirection = Vector2.left;
+            }
         }
         else
         {
             if (inputDirection.y > 0)
+            {
                 newDirection = Vector2.up;
+            }
             else if (inputDirection.y < 0)
+            {
                 newDirection = Vector2.down;
+            }
         }
 
-        // Block reverse direction
         if (newDirection + moveDirection != Vector2.zero)
         {
             moveDirection = newDirection;
@@ -114,7 +124,81 @@ public class PlayerMovement : MonoBehaviour
 
     private void Grow()
     {
-        GameObject segment = Instantiate(bodyPrefab);
+        Vector3 spawnPosition;
+
+        if (bodySegments.Count == 0)
+        {
+            spawnPosition = transform.position;
+        }
+        else
+        {
+            spawnPosition = bodySegments[bodySegments.Count - 1].position;
+        }
+
+        GameObject segment = Instantiate(bodyPrefab, spawnPosition, Quaternion.identity);
         bodySegments.Add(segment.transform);
+    }
+
+    private void SpawnFood()
+    {
+        Vector3 spawnPosition = GetRandomEmptyGridPosition();
+
+        if (foodTransform == null)
+        {
+            GameObject foodObject = Instantiate(foodPrefab, spawnPosition, Quaternion.identity);
+            foodTransform = foodObject.transform;
+        }
+        else
+        {
+            foodTransform.position = spawnPosition;
+        }
+    }
+
+    private void CheckFood()
+    {
+        if (foodTransform == null)
+        {
+            return;
+        }
+
+        if (transform.position == foodTransform.position)
+        {
+            Grow();
+            SpawnFood();
+        }
+    }
+
+    private Vector3 GetRandomEmptyGridPosition()
+    {
+        while (true)
+        {
+            int randomX = Random.Range(gridMin.x, gridMax.x + 1);
+            int randomY = Random.Range(gridMin.y, gridMax.y + 1);
+
+            Vector3 candidate = new Vector3(randomX * gridSize, randomY * gridSize, 0f);
+
+            if (PositionOccupiedBySnake(candidate) == false)
+            {
+                return candidate;
+            }
+        }
+    }
+
+    private bool PositionOccupiedBySnake(Vector3 position)
+    {
+        if (transform.position == position)
+        {
+            return true;
+        }
+
+        for (int i = 0; i < bodySegments.Count; i++)
+        {
+            if (bodySegments[i].position == position)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
