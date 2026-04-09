@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -28,9 +29,11 @@ public class PlayerMovement : MonoBehaviour
     private Transform foodTransform;
 
     private int score;
+    private bool isGameOver;
 
     [SerializeField] private float minMoveDelay = 0.08f;
     [SerializeField] private float speedUpAmount = 0.005f;
+    [SerializeField] private GamePlayUIController gamePlayUIController;
     
     private void Awake()
     {
@@ -39,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        if (gamePlayUIController != null)
+        {
+            gamePlayUIController.SetScore(score);
+        }
         Grow();
         SpawnFood();
     }
@@ -59,6 +66,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (isGameOver)
+        {
+            if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(
+                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+                );
+            }
+
+            return;
+        }
+
+        if (isGameOver)
+        {
+            if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                Debug.Log("R pressed");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+
+            if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+            {
+                Debug.Log("ESC pressed");
+                SceneManager.LoadScene("mainMenu");
+            }
+
+            return;
+        }
+
         moveTimer += Time.deltaTime;
 
         if (moveTimer >= moveDelay)
@@ -69,14 +105,14 @@ public class PlayerMovement : MonoBehaviour
             Move();
             if (IsOutOfBounds())
             {
-                Debug.Log("Game Over: Hit wall");
+                GameOver("Hit wall");
+                return;
             }
-            
+
             if (HitSelf())
             {
-                Debug.Log("Game Over: Hit self");
-
-                enabled = false; // stop movement immediately
+                GameOver("Hit self");
+                return;
             }
             CheckFood();
         }
@@ -204,8 +240,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position == foodTransform.position)
         {
-            score += 10;
-            Debug.Log("Score: " + score);
+            if (gamePlayUIController != null)
+            {
+                score += 10;
+                gamePlayUIController.SetScore(score);
+            }
 
             moveDelay = Mathf.Max(minMoveDelay, moveDelay - speedUpAmount);
 
@@ -246,5 +285,16 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return false;
+    }
+
+   private void GameOver(string reason)
+    {
+        isGameOver = true;
+        Debug.Log("Game Over: " + reason + " | Final Score: " + score);
+
+        if (gamePlayUIController != null)
+        {
+            gamePlayUIController.ShowGameOver(true, score);
+        }
     }
 }

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/gamePlay.uss?fileID=7433441132597879392&amp;guid=631accef91bac5748bc6f61e5e75f731&amp;type=3#gamePlay"/>
+    <ui:VisualElement name="root" class="root">
+        <ui:Label name="scoreLabel" text="Score: 0" class="scoreLabel"/>
+        <ui:VisualElement name="gameOverPanel" class="gameOverPanel">
+            <ui:Label name="gameOverTitle" text="GAME OVER" class="gameOverTitle"/>
+            <ui:Label name="finalScoreLabel" text="Score: 0" class="finalScoreLabel"/>
+            <ui:Label name="restartHintLabel" text="Press R to Restart" class="hintLabel"/>
+            <ui:Label name="menuHintLabel" text="Press Esc for Menu" class="hintLabel"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

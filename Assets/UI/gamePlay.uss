@@ -1,0 +1,50 @@
+.root {
+    flex-grow: 1;
+}
+
+.scoreLabel {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0.35);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.gameOverPanel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.7);
+
+    display: none;
+}
+
+.gameOverTitle {
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: rgb(255, 120, 120);
+    margin-bottom: 12px;
+}
+
+.finalScoreLabel {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 12px;
+}
+
+.hintLabel {
+    font-size: 18px;
+    color: rgb(220, 220, 220);
+    margin-bottom: 6px;
+}
