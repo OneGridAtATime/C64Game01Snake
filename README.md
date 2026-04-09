@@ -1,6 +1,6 @@
-# C64Game01Snake
+# C64Game 01 - Snake
 
-Simple Snake-style game built in Unity using the new Input System.
+Simple Snake-style game built in Unity using the new Input System and UI Toolkit.
 
 This project is part of a series focused on building small, polished, C64-inspired games with clean structure and repeatable workflows.
 
