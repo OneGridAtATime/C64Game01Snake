@@ -71,6 +71,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 Debug.Log("Game Over: Hit wall");
             }
+            
+            if (HitSelf())
+            {
+                Debug.Log("Game Over: Hit self");
+
+                enabled = false; // stop movement immediately
+            }
             CheckFood();
         }
     }
@@ -141,6 +148,19 @@ public class PlayerMovement : MonoBehaviour
         float maxY = gridMax.y * gridSize;
 
         return position.x < minX || position.x > maxX || position.y < minY || position.y > maxY;
+    }
+
+    private bool HitSelf()
+    {
+        for (int i = 0; i < bodySegments.Count; i++)
+        {
+            if (bodySegments[i].position == transform.position)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void Grow()
