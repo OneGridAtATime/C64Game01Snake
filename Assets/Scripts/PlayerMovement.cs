@@ -70,18 +70,6 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(
-                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-                );
-            }
-
-            return;
-        }
-
-        if (isGameOver)
-        {
-            if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
-            {
                 Debug.Log("R pressed");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
@@ -103,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
             UpdateDirection();
             Move();
+
             if (IsOutOfBounds())
             {
                 GameOver("Hit wall");
@@ -114,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
                 GameOver("Hit self");
                 return;
             }
+
             CheckFood();
         }
     }
