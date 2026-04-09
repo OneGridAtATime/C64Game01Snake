@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
 
     private Transform foodTransform;
 
+    private int score;
+
+    [SerializeField] private float minMoveDelay = 0.08f;
+    [SerializeField] private float speedUpAmount = 0.005f;
+    
     private void Awake()
     {
         input = new GameInputActions();
@@ -62,6 +67,10 @@ public class PlayerMovement : MonoBehaviour
 
             UpdateDirection();
             Move();
+            if (IsOutOfBounds())
+            {
+                Debug.Log("Game Over: Hit wall");
+            }
             CheckFood();
         }
     }
@@ -122,6 +131,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private bool IsOutOfBounds()
+    {
+        Vector3 position = transform.position;
+
+        float minX = gridMin.x * gridSize;
+        float maxX = gridMax.x * gridSize;
+        float minY = gridMin.y * gridSize;
+        float maxY = gridMax.y * gridSize;
+
+        return position.x < minX || position.x > maxX || position.y < minY || position.y > maxY;
+    }
+
     private void Grow()
     {
         Vector3 spawnPosition;
@@ -163,6 +184,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (transform.position == foodTransform.position)
         {
+            score += 10;
+            Debug.Log("Score: " + score);
+
+            moveDelay = Mathf.Max(minMoveDelay, moveDelay - speedUpAmount);
+
             Grow();
             SpawnFood();
         }
